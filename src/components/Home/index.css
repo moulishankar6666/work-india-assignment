@@ -1,0 +1,44 @@
+.home-page {
+  height: 100vh;
+  width: 100vw;
+}
+.home-page .content {
+  min-height: 90vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.content .movies-list {
+  width: 97%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.loader {
+  width: 100vw;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@media screen and (min-width: 575px) {
+  .content .movies-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media screen and (min-width: 767px) {
+  .content .movies-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media screen and (min-width: 991px) {
+  .content .movies-list {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+@media screen and (min-width: 1200px) {
+  .content .movies-list {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
