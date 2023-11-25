@@ -4,6 +4,7 @@ import Loader from 'react-loader-spinner'
 
 import Header from '../Header'
 import MovieItem from '../MovieItem'
+import Pagination from '../pagination'
 
 import './index.css'
 
@@ -15,7 +16,7 @@ const apiStatus = {
 }
 
 class TopRated extends Component {
-  state = {moviesList: [], status: apiStatus.initial}
+  state = {moviesList: [], status: apiStatus.initial, pageNo: 1}
 
   componentDidMount() {
     this.getMovieData()
@@ -30,29 +31,40 @@ class TopRated extends Component {
   })
 
   getMovieData = async () => {
+    const {pageNo} = this.state
     this.setState({status: apiStatus.progress})
     const apiKey = '7e96fcaf8ddcb161090b5ab36284ff82'
     const options = {method: 'GET'}
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=1`,
-      options,
+      `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=${pageNo}`,
     )
     const data = await response.json()
-    const updatedData = data.results.map(movie => this.changeCase(movie))
-    this.setState({moviesList: data.results, status: apiStatus.success})
+
+    this.setState({
+      moviesList: data.results,
+      status: apiStatus.success,
+    })
+  }
+
+  setPageList = pageNo => {
+    const {moviesList} = this.state
+    this.setState({pageNo})
   }
 
   renderSuccessView = () => {
     const {moviesList} = this.state
     return (
-      <section className="content">
-        <h1>TopRated</h1>
-        <ul className="movies-list">
-          {moviesList.map(movie => (
-            <MovieItem key={movie.id} movie={movie} />
-          ))}
-        </ul>
-      </section>
+      <>
+        <section className="content">
+          <h1>TopRated</h1>
+          <ul className="movies-list">
+            {moviesList.map(movie => (
+              <MovieItem key={movie.id} movie={movie} />
+            ))}
+          </ul>
+        </section>
+        <Pagination setPageList={this.setPageList} moviesList={moviesList} />
+      </>
     )
   }
 

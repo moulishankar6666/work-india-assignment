@@ -4,6 +4,7 @@ import Loader from 'react-loader-spinner'
 
 import Header from '../Header'
 import MovieItem from '../MovieItem'
+import Pagination from '../pagination'
 
 import './index.css'
 
@@ -15,7 +16,7 @@ const apiStatus = {
 }
 
 class Upcoming extends Component {
-  state = {moviesList: []}
+  state = {moviesList: [], status: apiStatus.initial, pageNo: 1}
 
   componentDidMount() {
     this.getMovieData()
@@ -30,30 +31,39 @@ class Upcoming extends Component {
   })
 
   getMovieData = async () => {
+    const {pageNo} = this.state
     this.setState({status: apiStatus.progress})
     const apiKey = '7e96fcaf8ddcb161090b5ab36284ff82'
     const options = {method: 'GET'}
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=1`,
+      `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=${pageNo}`,
       options,
     )
     const data = await response.json()
-    const updatedData = data.results.map(movie => this.changeCase(movie))
-    this.setState({moviesList: data.results, status: apiStatus.success})
+    // const updatedData = data.results.map(movie => this.changeCase(movie))
+    this.setState({
+      moviesList: data.results,
+      status: apiStatus.success,
+    })
+  }
+
+  setPageList = pageNo => {
+    this.setState({pageNo})
   }
 
   renderSuccessView = () => {
     const {moviesList} = this.state
     return (
       <>
-        <h1>Upcoming</h1>
         <section className="content">
+          <h1>Upcoming</h1>
           <ul className="movies-list">
             {moviesList.map(movie => (
               <MovieItem key={movie.id} movie={movie} />
             ))}
           </ul>
         </section>
+        <Pagination setPageList={this.setPageList} moviesList={moviesList} />
       </>
     )
   }

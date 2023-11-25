@@ -115,6 +115,7 @@ header nav ul li button {
     color: #fff;
     font-size: 15px;
     height: 100%;
+    border: solid #fff 1px;
   }
   .mobile-search-bar {
     display: flex;

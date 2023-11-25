@@ -10,8 +10,15 @@ import MovieContext from './context/MovieContext'
 
 import './App.css'
 
+const apiStatus = {
+  initial: 'INITIAL',
+  success: 'SUCCESS',
+  progress: 'PROGRESS',
+  failure: 'FAILURE',
+}
+
 class App extends Component {
-  state = {moviesList: []}
+  state = {moviesList: [], status: apiStatus.initial, pageList: []}
 
   componentDidMount() {
     this.getMovieData('')
@@ -25,12 +32,12 @@ class App extends Component {
     id: movie.id,
     title: movie.title,
     poster_path: `https://www.themoviedb.org/t/p/w600_and_h900_bestv2/${movie.poster_path}`,
-    vote_average: Math.round(movie.vote_average * 10),
+    vote_average: movie.vote_average,
     release_date: movie.release_date,
   })
 
   getMovieData = async value => {
-    const {userInput} = this.state
+    this.setState({status: apiStatus.progress})
     const apiKey = '7e96fcaf8ddcb161090b5ab36284ff82'
     const options = {method: 'GET'}
     const response = await fetch(
@@ -39,17 +46,29 @@ class App extends Component {
     )
     const data = await response.json()
     const updatedData = data.results.map(movie => this.changeCase(movie))
-    this.setState({moviesList: updatedData})
+    this.setState({
+      moviesList: updatedData,
+      status: apiStatus.success,
+      pageList: data.results.slice(1 * 10 - 10, 1 * 10),
+    })
+  }
+
+  setPageList = pageNo => {
+    const {moviesList} = this.state
+    this.setState({pageList: moviesList.slice(pageNo * 10 - 10, pageNo * 10)})
   }
 
   render() {
-    const {moviesList} = this.state
+    const {moviesList, status, pageList} = this.state
     return (
       <MovieContext.Provider
         value={{
           searchedList: moviesList,
           clickButton: this.onClickButton,
           setInput: this.setInput,
+          status,
+          pageList,
+          setPageList: this.setPageList,
         }}
       >
         <Switch>

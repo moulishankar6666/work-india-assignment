@@ -1,0 +1,23 @@
+.pagination-container {
+  width: 100vw;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding-bottom: 20px;
+}
+.pagination-container > button {
+  padding: 10px 15px;
+  font-weight: 600;
+  background-color: #000;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+
+.active-page-number {
+  color: #ff0000;
+}
+.de-activate-page-number {
+  color: #fff;
+}

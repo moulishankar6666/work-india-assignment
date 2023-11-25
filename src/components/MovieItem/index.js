@@ -6,7 +6,6 @@ const MovieItem = props => {
   const {movie} = props
   //   const {voteAverage, posterPath, title, releaseDate, id} = movie
   //   const pathColor = Math.round(voteAverage * 10) >= 70 ? '#0bb361' : '#c2b30c'
-
   return (
     <li className="movie-item">
       <div className="poster-image">
