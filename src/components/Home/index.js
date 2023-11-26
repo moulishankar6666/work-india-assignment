@@ -16,7 +16,7 @@ const apiStatus = {
 }
 
 class Home extends Component {
-  state = {moviesList: [], status: apiStatus.initial}
+  state = {status: apiStatus.initial, pageNumber: 1}
 
   componentDidMount() {
     this.getMovieData(1)
@@ -30,14 +30,14 @@ class Home extends Component {
     release_date: movie.release_date,
   })
 
-  getMovieData = async pageNo => {
+  getMovieData = async pageNumber => {
     this.setState({status: apiStatus.progress})
     const apiKey = '7e96fcaf8ddcb161090b5ab36284ff82'
     const options = {
       method: 'GET',
     }
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${pageNo}`,
+      `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=${pageNumber}`,
       options,
     )
     const data = await response.json()
@@ -49,11 +49,12 @@ class Home extends Component {
   }
 
   setPageList = pageNum => {
+    this.setState({pageNumber: pageNum})
     this.getMovieData(pageNum)
   }
 
   renderSuccessView = () => {
-    const {moviesList} = this.state
+    const {moviesList, pageNumber} = this.state
     return (
       <>
         <section className="content">
@@ -64,7 +65,11 @@ class Home extends Component {
             ))}
           </ul>
         </section>
-        <Pagination setPageList={this.setPageList} moviesList={moviesList} />
+        <Pagination
+          setPageNo={this.setPageList}
+          moviesList={moviesList}
+          pageNo={pageNumber}
+        />
       </>
     )
   }

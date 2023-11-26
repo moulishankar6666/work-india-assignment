@@ -5,7 +5,5 @@ const MovieContext = React.createContext({
   clickButton: () => {},
   setInput: () => {},
   status: '',
-  pageList: [],
-  setPageList: () => {},
 })
 export default MovieContext

@@ -3,7 +3,6 @@ import Loader from 'react-loader-spinner'
 import Header from '../Header'
 import MovieItem from '../MovieItem'
 import MovieContext from '../../context/MovieContext'
-import Pagination from '../pagination'
 
 import './index.css'
 
@@ -15,16 +14,15 @@ const apiStatus = {
 }
 
 const Search = () => {
-  const renderSuccessView = (searchedList, pageList, setPageList) => (
+  const renderSuccessView = searchedList => (
     <section className="content">
       {searchedList.length > 0 ? (
         <div className="movies-list-and-pagination">
           <ul className="movies-list">
-            {pageList.map(movie => (
+            {searchedList.map(movie => (
               <MovieItem key={movie.id} movie={movie} />
             ))}
           </ul>
-          <Pagination setPageList={setPageList} moviesList={searchedList} />
         </div>
       ) : (
         <p className="no-search-results">

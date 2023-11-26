@@ -16,10 +16,10 @@ const apiStatus = {
 }
 
 class Upcoming extends Component {
-  state = {moviesList: [], status: apiStatus.initial, pageNo: 1}
+  state = {moviesList: [], status: apiStatus.initial, pageNumber: 1}
 
   componentDidMount() {
-    this.getMovieData()
+    this.getMovieData(1)
   }
 
   changeCase = movie => ({
@@ -30,13 +30,12 @@ class Upcoming extends Component {
     release_date: movie.release_date,
   })
 
-  getMovieData = async () => {
-    const {pageNo} = this.state
+  getMovieData = async page => {
     this.setState({status: apiStatus.progress})
     const apiKey = '7e96fcaf8ddcb161090b5ab36284ff82'
     const options = {method: 'GET'}
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=${pageNo}`,
+      `https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}&language=en-US&page=${page}`,
       options,
     )
     const data = await response.json()
@@ -47,12 +46,13 @@ class Upcoming extends Component {
     })
   }
 
-  setPageList = pageNo => {
-    this.setState({pageNo})
+  setPageList = pageNum => {
+    this.setState({pageNumber: pageNum})
+    this.getMovieData(pageNum)
   }
 
   renderSuccessView = () => {
-    const {moviesList} = this.state
+    const {moviesList, pageNumber} = this.state
     return (
       <>
         <section className="content">
@@ -63,7 +63,11 @@ class Upcoming extends Component {
             ))}
           </ul>
         </section>
-        <Pagination setPageList={this.setPageList} moviesList={moviesList} />
+        <Pagination
+          setPageNo={this.setPageList}
+          moviesList={moviesList}
+          pageNo={pageNumber}
+        />
       </>
     )
   }

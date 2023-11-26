@@ -16,10 +16,10 @@ const apiStatus = {
 }
 
 class TopRated extends Component {
-  state = {moviesList: [], status: apiStatus.initial, pageNo: 1}
+  state = {moviesList: [], status: apiStatus.initial, pageNumber: 1}
 
   componentDidMount() {
-    this.getMovieData()
+    this.getMovieData(1)
   }
 
   changeCase = movie => ({
@@ -30,13 +30,12 @@ class TopRated extends Component {
     release_date: movie.release_date,
   })
 
-  getMovieData = async () => {
-    const {pageNo} = this.state
+  getMovieData = async page => {
     this.setState({status: apiStatus.progress})
     const apiKey = '7e96fcaf8ddcb161090b5ab36284ff82'
-    const options = {method: 'GET'}
+    // const options = {method: 'GET'}
     const response = await fetch(
-      `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=${pageNo}`,
+      `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=${page}`,
     )
     const data = await response.json()
 
@@ -46,24 +45,28 @@ class TopRated extends Component {
     })
   }
 
-  setPageList = pageNo => {
-    const {moviesList} = this.state
-    this.setState({pageNo})
+  setPageList = pageNum => {
+    this.setState({pageNumber: pageNum})
+    this.getMovieData(pageNum)
   }
 
   renderSuccessView = () => {
-    const {moviesList} = this.state
+    const {moviesList, pageNumber} = this.state
     return (
       <>
         <section className="content">
-          <h1>TopRated</h1>
+          <h1>Top Rated</h1>
           <ul className="movies-list">
             {moviesList.map(movie => (
               <MovieItem key={movie.id} movie={movie} />
             ))}
           </ul>
         </section>
-        <Pagination setPageList={this.setPageList} moviesList={moviesList} />
+        <Pagination
+          setPageNo={this.setPageList}
+          moviesList={moviesList}
+          pageNo={pageNumber}
+        />
       </>
     )
   }

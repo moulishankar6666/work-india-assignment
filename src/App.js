@@ -18,7 +18,7 @@ const apiStatus = {
 }
 
 class App extends Component {
-  state = {moviesList: [], status: apiStatus.initial, pageList: []}
+  state = {moviesList: [], status: apiStatus.initial}
 
   componentDidMount() {
     this.getMovieData('')
@@ -49,17 +49,11 @@ class App extends Component {
     this.setState({
       moviesList: updatedData,
       status: apiStatus.success,
-      pageList: data.results.slice(1 * 10 - 10, 1 * 10),
     })
   }
 
-  setPageList = pageNo => {
-    const {moviesList} = this.state
-    this.setState({pageList: moviesList.slice(pageNo * 10 - 10, pageNo * 10)})
-  }
-
   render() {
-    const {moviesList, status, pageList} = this.state
+    const {moviesList, status} = this.state
     return (
       <MovieContext.Provider
         value={{
@@ -67,8 +61,6 @@ class App extends Component {
           clickButton: this.onClickButton,
           setInput: this.setInput,
           status,
-          pageList,
-          setPageList: this.setPageList,
         }}
       >
         <Switch>
